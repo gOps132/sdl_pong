@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	}
 
 	// CREATE RENDERER
-	SDL_Renderer *m_renderer = SDL_CreateRenderer(m_window_instance, m_window.title.c_str());
+	SDL_Renderer *m_renderer = SDL_CreateRenderer(m_window_instance, nullptr);
 	if (!m_renderer)
 	{
 		std::cout << "Renderer can't be created! SDL_Error: " << SDL_GetError();
@@ -63,13 +63,30 @@ int main(int argc, char **argv)
 
 		SDL_GetWindowSize(m_window_instance, &m_window.width, &m_window.height);
 
-	    SDL_Surface *m_surface = SDL_CreateSurface(m_window.width, m_window.height, SDL_PIXELFORMAT_ARGB8888);
+	    SDL_Surface *m_surface = SDL_CreateSurface(m_window.width, m_window.height, SDL_PIXELFORMAT_RGBA8888);
 		if (!m_surface)
 		{
 			printf("Surface could not be created! SDL_Error: %s\n", SDL_GetError());
 			interrupt = true;
 			break;
 		}
+
+		// Define the color 0x2ad873
+		uint32_t color = 0x2ad873;
+
+		// Extract RGB components
+		uint8_t r = (color >> 16) & 0xFF;
+		uint8_t g = (color >> 8) & 0xFF;
+		uint8_t b = color & 0xFF;
+	
+		// map the color to the pixel format of the surface
+		uint32_t pixel_color = SDL_MapSurfaceRGB(m_surface, r, g, b);
+
+		// std::vector<uint32_t> pixels(m_window.width * m_window.height, 0);
+		// std::fill_n(pixels.data(), m_window.width * m_window.height, pixel_color);
+
+		SDL_Rect rect = {0,0,m_window.width,m_window.height}; // rectangle covering the entire surface
+		SDL_FillSurfaceRect(m_surface, &rect, pixel_color);
 
 		SDL_Texture *m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
 		if (!m_texture)
@@ -81,13 +98,8 @@ int main(int argc, char **argv)
 		SDL_DestroySurface(m_surface);
 
 		// RENDER
-		std::vector<uint32_t> pixels(m_window.width * m_window.height, 0);
-
-		// default color
-		std::fill_n(pixels.data(), m_window.width * m_window.height, 0x2ad873);
-		
-		SDL_UpdateTexture(m_texture, nullptr, pixels.data(), 4 * m_window.width);
-
+		 
+		// SDL_UpdateTexture(m_texture, nullptr, pixels.data(), 4 * m_window.width);
 		SDL_RenderClear(m_renderer);
 		SDL_RenderTexture(m_renderer, m_texture, nullptr, nullptr);
 		SDL_RenderPresent(m_renderer);
