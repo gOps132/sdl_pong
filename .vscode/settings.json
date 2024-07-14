@@ -98,7 +98,11 @@
 		"*.cuh": "cpp",
 		"__functional_base_03": "cpp",
 		"__functional_03": "cpp",
-		"__cxx_version": "cpp"
+		"__cxx_version": "cpp",
+		"xlocinfo": "cpp",
+		"xstring": "cpp",
+		"xiosbase": "cpp",
+		"xutility": "cpp"
 	},
 	"dotnet.defaultSolution": "lib/imgui-test/examples/imgui_examples.sln",
 }

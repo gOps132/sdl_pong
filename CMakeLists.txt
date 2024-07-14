@@ -24,7 +24,7 @@ set(SDL_PONG_SOURCE_FILES
 set( BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE )
 set( SDL_STATIC ON CACHE BOOL "" FORCE )
 
-add_subdirectory("${CMAKE_SOURCE_DIR}/lib/SDL3")
+add_subdirectory(lib/SDL3)
 
 # -------------------------------------------------
 # GENERATE EXECUTABLE
@@ -36,7 +36,7 @@ add_executable(${TARGET_NAME} ${SDL_PONG_SOURCE_FILES})
 # TARGET PROPERTIES
 # ------------------------------------------
 target_link_libraries(${TARGET_NAME}
-    PRIVATE SDL3-static
+    PUBLIC SDL3-static
 )
 
 set_target_properties(${TARGET_NAME} PROPERTIES
