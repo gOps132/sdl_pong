@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.17)
 
 project(sdl_pong
     VERSION 1.0.0
-    DESCRIPTION "SDL_PONG "
+    DESCRIPTION "my attempt of making pong in sdl"
     LANGUAGES CXX
 )
 
@@ -20,11 +20,11 @@ set(SDL_PONG_SOURCE_FILES
 # -------------------------------------------------
 # FIND LIBRARIES
 # -------------------------------------------------
-# TODO: WHY ARE WE DOING THIS?
+# Force sdl2 to build as a static library
+set( BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE )
 set( SDL_STATIC ON CACHE BOOL "" FORCE )
-set( SDL_SHARED OFF CACHE BOOL "" FORCE )
 
-add_subdirectory("${CMAKE_SOURCE_DIR}/lib/sdl2")
+add_subdirectory("${CMAKE_SOURCE_DIR}/lib/SDL3")
 
 # -------------------------------------------------
 # GENERATE EXECUTABLE
@@ -36,8 +36,7 @@ add_executable(${TARGET_NAME} ${SDL_PONG_SOURCE_FILES})
 # TARGET PROPERTIES
 # ------------------------------------------
 target_link_libraries(${TARGET_NAME}
-    PUBLIC SDL2main
-    PUBLIC SDL2-static
+    PRIVATE SDL3-static
 )
 
 set_target_properties(${TARGET_NAME} PROPERTIES
