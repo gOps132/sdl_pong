@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include <string>
-#include <algorithm>
 #include <vector>
 #include <exception>
-#include <memory>
+#include <chrono>
+
 
 class Window {
 public:
@@ -84,8 +84,13 @@ public:
 	 */
 	void game_loop()
 	{
+		auto start_time = std::chrono::steady_clock::now();
 		while (interrupt)
 		{
+			auto now = std::chrono::steady_clock::now();
+    		auto time = std::chrono::duration_cast<std::chrono::seconds>(now-start_time);
+			time_elapsed = time.count();
+
 			// POLL EVENTS
 			while (SDL_PollEvent(&ev))
 				switch (ev.type)
@@ -96,51 +101,60 @@ public:
 						break;
 				}
 	
-			m_window->update_window_size();
+			// frame rate
+			update(1.0/60.0);
 
-			SDL_Surface *m_surface = SDL_CreateSurface(m_window->get_width(), m_window->get_height(), SDL_PIXELFORMAT_RGBA8888);
-			if (!m_surface)
-			{
-				throw SDL_GetError();
-			}
-
-			// Define the color 0x2ad873
-			uint32_t color = 0x2ad873;
-
-			// Extract RGB components
-			uint8_t r = (color >> 16) & 0xFF;
-			uint8_t g = (color >> 8) & 0xFF;
-			uint8_t b = color & 0xFF;
-		
-			// map the color to the pixel format of the surface
-			uint32_t pixel_color = SDL_MapSurfaceRGB(m_surface, r, g, b);
-
-			// std::vector<uint32_t> pixels(m_window.width * m_window.height, 0);
-			// std::fill_n(pixels.data(), m_window.width * m_window.height, pixel_color);
-
-			SDL_Rect rect = {0,0,m_window->get_width(),m_window->get_height()}; // rectangle covering the entire surface
-			SDL_FillSurfaceRect(m_surface, &rect, pixel_color);
-
-			SDL_Texture *m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
-			if (!m_texture)
-			{
-				throw SDL_GetError();
-			}
-			SDL_DestroySurface(m_surface);
-
-			// RENDER
-
-			// SDL_UpdateTexture(m_texture, nullptr, pixels.data(), 4 * m_window.width);
-			SDL_RenderClear(m_renderer);
-			SDL_RenderTexture(m_renderer, m_texture, nullptr, nullptr);
-			SDL_RenderPresent(m_renderer);
+			std::cout << "time elapsed: " << time_elapsed << "\n";
 		}
+	}
+
+	void update(double p_delta_time)
+	{
+		m_window->update_window_size();
+
+		SDL_Surface *m_surface = SDL_CreateSurface(m_window->get_width(), m_window->get_height(), SDL_PIXELFORMAT_RGBA8888);
+		if (!m_surface)
+		{
+			throw SDL_GetError();
+		}
+
+		// Define the color 0x2ad873
+		uint32_t color = 0x2ad873;
+
+		// Extract RGB components
+		uint8_t r = (color >> 16) & 0xFF;
+		uint8_t g = (color >> 8) & 0xFF;
+		uint8_t b = color & 0xFF;
+	
+		// map the color to the pixel format of the surface
+		uint32_t pixel_color = SDL_MapSurfaceRGB(m_surface, r, g, b);
+
+		// std::vector<uint32_t> pixels(m_window.width * m_window.height, 0);
+		// std::fill_n(pixels.data(), m_window.width * m_window.height, pixel_color);
+
+		SDL_Rect rect = {0,0,m_window->get_width(),m_window->get_height()}; // rectangle covering the entire surface
+		SDL_FillSurfaceRect(m_surface, &rect, pixel_color);
+
+		SDL_Texture *m_texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
+		if (!m_texture)
+		{
+			throw SDL_GetError();
+		}
+		SDL_DestroySurface(m_surface);
+
+		// RENDER
+		// SDL_UpdateTexture(m_texture, nullptr, pixels.data(), 4 * m_window.width);
+		SDL_RenderClear(m_renderer);
+		SDL_RenderTexture(m_renderer, m_texture, nullptr, nullptr);
+		SDL_RenderPresent(m_renderer);
+		 
 	}
 private:
 	Window *m_window = nullptr;
 	SDL_Renderer *m_renderer = nullptr;
 	SDL_Event ev;
 	bool interrupt = true;
+	double time_elapsed;
 };
 
 int main(int argc, char **argv)
