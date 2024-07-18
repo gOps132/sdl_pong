@@ -142,7 +142,7 @@ public:
 		m_paddle[0].width = 10;
 		m_paddle[0].height = 50;
 		
-		m_paddle[1].x = m_screen->w - 20;
+		m_paddle[1].x = m_screen->w - 20 - 10;
 		m_paddle[1].y = (m_screen->h/2)-50;
 		m_paddle[1].width = 10;
 		m_paddle[1].height = 50;
@@ -163,16 +163,6 @@ public:
 			auto now = std::chrono::steady_clock::now();
     		auto time = std::chrono::duration_cast<std::chrono::seconds>(now-start_time);
 
-			// POLL EVENTS
-			while (SDL_PollEvent(&ev))
-				switch (ev.type)
-				{
-					case SDL_EventType::SDL_EVENT_QUIT:
-						throw "Application shutdown\n";
-						m_interrupt = false;
-						break;
-				}
-	
 			// frame rate
 			update(1.0/60.0);
 
@@ -185,7 +175,7 @@ public:
 
 	void drawBall() 
 	{
-		SDL_Rect src;
+		SDL_Rect src;  
 
 		src.x = m_ball.x;
 		src.y = m_ball.y;
@@ -218,20 +208,38 @@ public:
 			}
 		}
 	}
+
+	void drawBackground()
+	{
+		SDL_Rect rect = {0,0,m_window->getWidth(),m_window->getHeight()}; // rectangle covering the entire surface
+		SDL_FillSurfaceRect(m_screen, &rect, 0x7F3A89FF);
+	}
 	
 // TODO: window resizing event implementation later??
 	void update(double p_delta_time)
 	{
+		// POLL EVENTS
+		while (SDL_PollEvent(&ev))
+			switch (ev.type)
+			{
+				case SDL_EventType::SDL_EVENT_QUIT:
+					m_interrupt = false;
+					throw "Application shutdown\n";
+					break;
+			}
+	
 		// m_window->updateWindowSize();
 
 		// map the color to the pixel format of the surface
 		// uint32_t color = colorConvert(m_screen, 0x2ad873);
 
-		SDL_Rect rect = {0,0,m_window->getWidth(),m_window->getHeight()}; // rectangle covering the entire surface
-		SDL_FillSurfaceRect(m_screen, &rect, 0x7F3A89FF);
-		
-		drawBall();
-		drawPaddle();
+		// main menu
+
+		// when game starts
+			drawBackground();
+
+			drawBall();
+			drawPaddle();
 
 		SDL_Texture *m_texture = SDL_CreateTextureFromSurface(m_renderer, m_screen);
 		if (!m_texture)
@@ -254,6 +262,7 @@ private:
 
 	Paddle m_paddle[2];
 	Ball m_ball;
+	int score[2] = {0,0};
 
 	bool m_interrupt = true;
 	double m_time_elapsed;
