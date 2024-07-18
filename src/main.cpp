@@ -85,7 +85,6 @@ uint32_t colorConvert(SDL_Surface* surface, int p_color)
 	return SDL_MapSurfaceRGB(surface, r, g, b);
 }
 
-
 class Pong {
 public:
 	Pong() 
@@ -94,7 +93,7 @@ public:
 
 		// initialize sdl subsystems
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
-		{ 
+		{
 			throw SDL_GetError(); 
 		}
 
@@ -121,12 +120,7 @@ public:
 		delete m_window;
 		SDL_Quit(); 
 	};
-	// TODO:
-	void restart()
-	{
-		// delete stuff
 
-	}
 	void initGame()
 	{
 		// center ball
@@ -151,25 +145,33 @@ public:
 	}
 
 	/**
-	 * poll events
-	 * check for  
-	 * Update ball position
+	 *	poll events
+	 *	check for  
+	 *	Update ball position
 	 */
 	void gameLoop()
 	{
+#ifndef DEBUG
 		auto start_time = std::chrono::steady_clock::now();
+#endif
 		while (m_interrupt)
 		{
+			update();
+#ifdef DEBUG
 			auto now = std::chrono::steady_clock::now();
     		auto time = std::chrono::duration_cast<std::chrono::seconds>(now-start_time);
 
-			// frame rate
-			update(1.0/60.0);
-
-#ifdef DEBUG
 			m_time_elapsed = time.count();
 			std::cout << "time elapsed: " << m_time_elapsed << "\n";
 #endif
+			// 	frame rate
+			//	time it takes to render  frame in milliseconds
+			next_game_tick += 1000 / 60;
+			sleep = next_game_tick - SDL_GetTicks();
+		
+			if( sleep >= 0 ) {
+				SDL_Delay(sleep);
+			}
 		}
 	}
 
@@ -188,6 +190,13 @@ public:
 		if (r !=0){
 			throw SDL_GetError();
 		}
+	}
+
+	void moveBall()
+	{
+		/* Move the ball by its motion vector. */
+		// m_ball.x += m_ball.dx;
+		// m_ball.y += m_ball.dy;
 	}
 
 	void drawPaddle()
@@ -209,37 +218,90 @@ public:
 		}
 	}
 
+	void movePaddle(const int p_direction, Paddle &p_paddle)
+	{
+		// paddle moving down
+		if (p_direction <= 0)
+		{ 
+			if (p_paddle.y >= m_screen->h - p_paddle.height)
+			{
+				// stay
+				p_paddle.y = m_screen->h - p_paddle.height;	
+			}
+			else
+			{
+				p_paddle.y += 5;
+			} 
+		}
+		// paddle moving up
+		if (p_direction > 0)
+		{
+			if (p_paddle.y <= 0)
+			{
+				// stay at current position
+				p_paddle.y = 0;	
+			} 
+			else 
+			{
+				p_paddle.y -= 5;
+			} 
+		}
+	}
+
 	void drawBackground()
 	{
 		SDL_Rect rect = {0,0,m_window->getWidth(),m_window->getHeight()}; // rectangle covering the entire surface
-		SDL_FillSurfaceRect(m_screen, &rect, 0x7F3A89FF);
+		SDL_FillSurfaceRect(m_screen, &rect, 0x7F3AF9FA);
 	}
-	
+
 // TODO: window resizing event implementation later??
-	void update(double p_delta_time)
+	void update()
 	{
 		// POLL EVENTS
 		while (SDL_PollEvent(&ev))
+		{
 			switch (ev.type)
 			{
 				case SDL_EventType::SDL_EVENT_QUIT:
 					m_interrupt = false;
 					throw "Application shutdown\n";
 					break;
+				default:
+					break;
 			}
-	
+			// TODO: PADDLES WONT MOVE INDEPENDENTLY OF EACH OTHER IN A SINGLE THREAD
+			switch (ev.key.key)
+			{
+				// move right paddle down
+				case SDLK_DOWN:
+					movePaddle(-1, m_paddle[1]);
+					std::cout << "MOVE RIGHT PADDLE DOWN\n";
+					break;
+				case SDLK_UP:
+					movePaddle(1, m_paddle[1]);
+					std::cout << "MOVE RIGHT PADDLE UP\n";
+					break;
+				case SDLK_S:
+					movePaddle(-1, m_paddle[0]);
+					std::cout << "MOVE LEFT PADDLE DOWN\n";
+					break;
+				case SDLK_W:
+					movePaddle(1, m_paddle[0]);
+					std::cout << "MOVE LEFT PADDLE UP\n";
+					break;
+				default:
+					break;
+			}
+		}
 		// m_window->updateWindowSize();
-
-		// map the color to the pixel format of the surface
-		// uint32_t color = colorConvert(m_screen, 0x2ad873);
-
+		
 		// main menu
-
 		// when game starts
 			drawBackground();
-
 			drawBall();
+			moveBall();
 			drawPaddle();
+		// end
 
 		SDL_Texture *m_texture = SDL_CreateTextureFromSurface(m_renderer, m_screen);
 		if (!m_texture)
@@ -249,7 +311,8 @@ public:
 
 		// RENDER
 		SDL_RenderClear(m_renderer);
-		SDL_UpdateTexture(m_texture, nullptr, m_screen->pixels, m_screen->w * sizeof(uint32_t));
+		// TODO: Redundant?
+		// SDL_UpdateTexture(m_texture, nullptr, m_screen->pixels, m_screen->w * sizeof(uint32_t));
 		SDL_RenderTexture(m_renderer, m_texture, nullptr, nullptr);
 		SDL_RenderPresent(m_renderer);  
 	}
@@ -266,6 +329,8 @@ private:
 
 	bool m_interrupt = true;
 	double m_time_elapsed;
+	int sleep = 0;
+	uint32_t next_game_tick = SDL_GetTicks();
 
 	int m_white_color;
 };
