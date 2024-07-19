@@ -164,8 +164,7 @@ public:
 			m_time_elapsed = time.count();
 			std::cout << "time elapsed: " << m_time_elapsed << "\n";
 #endif
-			// 	frame rate
-			//	time it takes to render  frame in milliseconds
+			// 	frame rate in milliseconds
 			next_game_tick += 1000 / 60;
 			sleep = next_game_tick - SDL_GetTicks();
 		
@@ -258,9 +257,9 @@ public:
 	void update()
 	{
 		// POLL EVENTS
-		while (SDL_PollEvent(&ev))
+		while (SDL_PollEvent(&m_ev))
 		{
-			switch (ev.type)
+			switch (m_ev.type)
 			{
 				case SDL_EventType::SDL_EVENT_QUIT:
 					m_interrupt = false;
@@ -270,7 +269,7 @@ public:
 					break;
 			}
 			// TODO: PADDLES WONT MOVE INDEPENDENTLY OF EACH OTHER IN A SINGLE THREAD
-			switch (ev.key.key)
+			switch (m_ev.key.key)
 			{
 				// move right paddle down
 				case SDLK_DOWN:
@@ -319,7 +318,7 @@ public:
 private:
 	Window *m_window = nullptr;
 	SDL_Renderer *m_renderer = nullptr;
-	SDL_Event ev;
+	SDL_Event m_ev;
 
 	SDL_Surface *m_screen;
 
