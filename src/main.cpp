@@ -13,5 +13,7 @@ int main(int argc, char **argv)
 			return -1;
 		}
 
+		std::cout << "Application Shutdown \n";
+
     return 0;
 }

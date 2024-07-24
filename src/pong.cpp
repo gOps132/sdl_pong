@@ -40,7 +40,6 @@ Pong::~Pong()
 void Pong::gameLoop()
 {
 	m_interrupt = true;
-	// TODO: fix when m_interrupt is false, then instantly go to
 end:
 	while (m_interrupt)
 	{
@@ -49,14 +48,13 @@ end:
 			switch (s_gc->m_ev.type)
 			{
 				case SDL_EventType::SDL_EVENT_QUIT:
-					std::cout << "Application Shutdown \n";
 					m_interrupt = false;
 					goto end;
 					// break;
 				default:
 					break;
 			}
-			std::cout << "poll pong\n";
+			// std::cout << "poll pong\n";
 			m_p1.handleInput(s_gc->m_ev);
 			m_p2.handleInput(s_gc->m_ev);
 		}
@@ -74,6 +72,10 @@ void Pong::update(double delta_time)
 
 void Pong::draw()
 {
+	// draw background
+	SDL_Rect rect = {0,0,s_gc->m_window->getWidth(),s_gc->m_window->getHeight()};
+	SDL_FillSurfaceRect(s_gc->m_screen, &rect, 0x7F3AF9FA);
+
 	m_ball.draw(s_gc->m_screen);
 	m_p1.draw(s_gc->m_screen);
 	m_p2.draw(s_gc->m_screen);
