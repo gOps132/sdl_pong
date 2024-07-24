@@ -15,6 +15,11 @@ set(TARGET_NAME ${PROJECT_NAME})
  
 set(SDL_PONG_SOURCE_FILES
     src/main.cpp
+	src/game_context.cpp
+	src/pong.cpp
+	src/paddle.cpp
+	src/ball.cpp
+	src/window.cpp
 )
 
 # -------------------------------------------------
