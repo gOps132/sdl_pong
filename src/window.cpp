@@ -2,9 +2,6 @@
 
 #include <string>
 
-#include <iostream>
-#include <exception>
-
 Window::Window(int p_width, int p_height, std::string p_title)
 	: m_width(p_width), m_height(p_height), m_title(p_title)
 {
@@ -23,14 +20,8 @@ Window::Window(int p_width, int p_height, std::string p_title)
 
 Window::~Window() 
 {
-	try
-	{
 	SDL_DestroyWindow(m_window_instance);
-	} catch (const char* e)
-	{
-		std::cout << e << "\n";
-	}
-};
+}
 
 SDL_Window *Window::getInstance() { return m_window_instance; }
 

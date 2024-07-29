@@ -20,6 +20,7 @@ set(SDL_PONG_SOURCE_FILES
 	src/paddle.cpp
 	src/ball.cpp
 	src/window.cpp
+	src/timestep.cpp
 )
 
 # -------------------------------------------------

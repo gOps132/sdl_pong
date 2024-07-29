@@ -18,12 +18,19 @@ GameContext::GameContext()
 		throw SDL_GetError(); 
 	}
 
+	if(!SDL_SetHint("SDL_PROP_RENDERER_CREATE_PRESENT_VSYNC_NUMBER", "1")) {
+		throw SDL_GetError();
+	}
+
 	// CREATE RENDERER
 	m_renderer = SDL_CreateRenderer(m_window->getInstance(), nullptr);
 	if (!m_renderer)
 	{
 		throw SDL_GetError();
 	}
+
+	// SDL_PropertiesID properties = {};
+	// SDL_CreateRendererWithProperties();
 
 	// CREATE SCREEN TO DRAW
 	m_screen = SDL_CreateSurface(m_window->getWidth(), m_window->getHeight(), SDL_PIXELFORMAT_RGBA8888);

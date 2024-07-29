@@ -17,8 +17,9 @@ class Pong {
 public:
 	Pong();
 	~Pong();
-	void gameLoop();
 
+	void gameLoop();
+	void reset();
 	void update(double delta_time);
 	void draw();
 
@@ -28,6 +29,7 @@ private:
 	Paddle 			 m_p2;
 	Ball 			 m_ball;
 	
+	float m_last_frame_time = 1.0f;
 	int score[2] = {0,0};
 	bool m_interrupt = true;
 };

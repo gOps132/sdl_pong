@@ -8,15 +8,17 @@ public:
 	enum class Type {LEFT = 0,RIGHT};
 	enum class Direction {NONE=0, UP, DOWN};
 
-	Paddle(Type p_type, double p_x, double p_y, int p_w, int p_h, int p_color);
+	Paddle(Type p_type, float p_x, float p_y, float p_w, float p_h, float p_dy, int p_color);
 	~Paddle() = default;
-
+	
 	void handleInput(SDL_Event const &p_event);
-	void update(double p_delta_time);
+	void update(float p_delta_time);
 	void draw(SDL_Surface *p_surface);
+
+	float m_x,m_y;
+	float m_w,m_h;
+	float m_dy;
 private:
-	double m_x,m_y;
-	int m_w,m_h;
 	Type m_type;
 	SDL_Rect m_rect;
 	int m_color;
