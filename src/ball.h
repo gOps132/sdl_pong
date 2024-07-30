@@ -10,16 +10,15 @@ public:
 	~Ball() = default;
  
 	void init(float p_x, float p_y);
-	void checkCollision(Paddle &p_paddle);
 	void update(float p_delta_time);
 	void draw(SDL_Surface *p_surface);
-private:
+public:
 	float m_x,m_y;
 	float m_w,m_h;
 	float m_dx, m_dy;
-	SDL_Rect m_rect;
 	int m_color;
-	bool m_in_collision;
+private:
+	SDL_Rect m_rect;
 };
 
 #endif // __BALL_H__

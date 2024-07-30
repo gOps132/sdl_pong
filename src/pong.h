@@ -20,6 +20,7 @@ public:
 
 	void gameLoop();
 	void reset();
+	bool checkCollisions(Ball &p_ball, Paddle &p_paddle);
 	void update(double delta_time);
 	void draw();
 

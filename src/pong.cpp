@@ -24,7 +24,7 @@ Pong::Pong()
 			Paddle::Type::RIGHT, 
 			// 20.0,20.0,
 			static_cast<float>(SCREEN_WIDTH) - 20 - 10,
-			static_cast<float>((SCREEN_WIDTH / 2) - 50),
+			static_cast<float>((SCREEN_HEIGHT / 2) - 50),
 			10.0f, 50.0f,
 			200.0f,
 			0xffffffff
@@ -100,10 +100,11 @@ end:
 			delta_time = 0.01;
 		}
 
-		std::cout << "delta time: " << delta_time << "\n";
+		// std::cout << "delta time: " << delta_time << "\n";
 
 		// Do rendering loop
 		update(delta_time);
+		
 		draw();
 
 		++counted_frames;
@@ -116,13 +117,72 @@ void Pong::reset()
 	m_ball.init(static_cast<float>(SCREEN_WIDTH / 2), static_cast<float>(SCREEN_HEIGHT / 2));
 }
 
+// TODO: REFRACTOR THE CODE IN A MORE GENERAL AND MODULAR DESIGN PATTERN
+bool Pong::checkCollisions(Ball &p_ball, Paddle &p_paddle)
+{
+	// depends if paddle is left or right
+	if (p_paddle.m_type == Paddle::Type::LEFT)
+	{
+		// cross x boundary
+		// hits the height of the paddle offset of the y pos
+		// and less than the y offset of the paddle plus the height of the paddle
+		if (
+			(p_paddle.m_x + p_paddle.m_w > m_ball.m_x)		&& 
+			(p_ball.m_y > p_paddle.m_y) 					&& 
+			(p_ball.m_y < p_paddle.m_y + p_paddle.m_h))
+		{
+			return true;
+		}
+	}
+
+	if (p_paddle.m_type == Paddle::Type::RIGHT)
+	{
+		// cross right x boundary
+		// hits the height of the paddle offset of the y pos
+		// and less than the y offset of hte paddle plus the height of the paddle
+		if(
+			(p_paddle.m_x - p_paddle.m_w < m_ball.m_x)		&&
+			(p_ball.m_y > p_paddle.m_y) 					&& 
+			(p_ball.m_y < p_paddle.m_y + p_paddle.m_h)
+		)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// TODO: Render score
 void Pong::update(double delta_time)
 {
 	m_p1.update(delta_time);
 	m_p2.update(delta_time);
-	m_ball.checkCollision(m_p1);
-	m_ball.checkCollision(m_p2);
 	m_ball.update(delta_time);
+	
+	if(checkCollisions(m_ball, m_p1) || checkCollisions(m_ball, m_p2))
+		m_ball.m_dx = -m_ball.m_dx;
+
+	/* turn the ball around if it hits the edge of the screen */
+	if (m_ball.m_x < 0)
+	{
+		score[0]++;
+		std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
+		m_ball.m_dx = -m_ball.m_dx;
+		reset();
+	}
+	if (m_ball.m_x > s_gc->m_screen->w - 10)
+	{
+		score[1]++;
+		std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
+		m_ball.m_dx = -m_ball.m_dx;
+		reset();
+	}
+	if ((m_ball.m_y < 0 || m_ball.m_y > s_gc->m_screen->h - 10))
+	{
+		m_ball.m_dy = -m_ball.m_dy;
+	}
+
 }
 
 void Pong::draw()

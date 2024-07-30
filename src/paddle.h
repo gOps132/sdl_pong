@@ -14,14 +14,14 @@ public:
 	void handleInput(SDL_Event const &p_event);
 	void update(float p_delta_time);
 	void draw(SDL_Surface *p_surface);
-
+public:
 	float m_x,m_y;
 	float m_w,m_h;
 	float m_dy;
-private:
-	Type m_type;
-	SDL_Rect m_rect;
 	int m_color;
+	Type m_type;
+private:
+	SDL_Rect m_rect;
 	Direction m_direction;
 };
 
