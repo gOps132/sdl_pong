@@ -29,9 +29,6 @@ GameContext::GameContext()
 		throw SDL_GetError();
 	}
 
-	// SDL_PropertiesID properties = {};
-	// SDL_CreateRendererWithProperties();
-
 	// CREATE SCREEN TO DRAW
 	m_screen = SDL_CreateSurface(m_window->getWidth(), m_window->getHeight(), SDL_PIXELFORMAT_RGBA8888);
 	// m_screen = SDL_CreateSurface(m_window->getWidth(), m_window->getHeight(), SDL_PIXELFORMAT_RGBA32);
@@ -40,8 +37,6 @@ GameContext::GameContext()
 		throw SDL_GetError();
 	}
 
-	// prolly inefficent to recreate a texture every update
-	// TODO: change to update texture later
 	m_texture = SDL_CreateTextureFromSurface(m_renderer, m_screen);
 	if (!m_texture)
 	{
