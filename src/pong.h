@@ -34,6 +34,7 @@ private:
 	Paddle 			 m_p2;
 	Ball 			 m_ball;
 	
+	float m_iv = 130.0f;
 	float m_last_frame_time = 1.0f;
 	int score[2] = {0,0};
 	bool m_interrupt = true;

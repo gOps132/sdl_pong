@@ -112,6 +112,9 @@ void Pong::reset(float p_x, float p_y)
 {
 	// center ball
 	m_ball.init(p_x, p_y);
+
+	// decrement the speed of the ball if its beyond the initial speed
+	m_ball.m_dx, m_ball.m_dy -= (m_ball.m_dx > m_iv || m_ball.m_dy > m_iv) ? 10.0f : 0.0f;
 }
 
 // TODO: REFRACTOR THE CODE IN A MORE GENERAL AND MODULAR DESIGN PATTERN
@@ -158,7 +161,11 @@ void Pong::update(double delta_time)
 	m_ball.update(delta_time);
 	
 	if(checkCollisions(m_ball, m_p1) || checkCollisions(m_ball, m_p2))
+	{
+		m_ball.m_dx += 10.0;
+		m_ball.m_dy += 10.0;
 		m_ball.m_dx = -m_ball.m_dx;
+	}
 
 	/* turn the ball around if it hits the edge of the screen */
 	if (m_ball.m_x < 0)
