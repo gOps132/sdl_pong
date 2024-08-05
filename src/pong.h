@@ -13,13 +13,17 @@
 #include "Paddle.h"
 #include "ball.h"
 
+#define SCREEN_WIDTH 	640
+#define SCREEN_HEIGHT 	480
+#define FPS				60
+
 class Pong {
 public:
 	Pong();
 	~Pong();
 
 	void gameLoop();
-	void reset();
+	void reset(float p_x, float p_y);
 	bool checkCollisions(Ball &p_ball, Paddle &p_paddle);
 	void update(double delta_time);
 	void draw();
@@ -34,4 +38,5 @@ private:
 	int score[2] = {0,0};
 	bool m_interrupt = true;
 };
+
 #endif // __PONG_H__

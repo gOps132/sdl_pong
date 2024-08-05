@@ -6,10 +6,7 @@
 #include "game_context.h"
 #include "window.h"
 #include "timestep.h"
-
-#define SCREEN_WIDTH 	640
-#define SCREEN_HEIGHT 	480
-#define FPS				60
+#include "helper.h"
 
 Pong::Pong()
 	: 	m_p1(
@@ -35,7 +32,7 @@ Pong::Pong()
 			0xffffffff
 		)
 {
-	reset();
+	reset(static_cast<float>(SCREEN_WIDTH / 2), static_cast<float>(SCREEN_HEIGHT / 2));
 	s_gc = &GameContext::getInstance();
 }
 
@@ -111,10 +108,10 @@ end:
 	}
 }
 
-void Pong::reset()
+void Pong::reset(float p_x, float p_y)
 {
 	// center ball
-	m_ball.init(static_cast<float>(SCREEN_WIDTH / 2), static_cast<float>(SCREEN_HEIGHT / 2));
+	m_ball.init(p_x, p_y);
 }
 
 // TODO: REFRACTOR THE CODE IN A MORE GENERAL AND MODULAR DESIGN PATTERN
@@ -166,17 +163,17 @@ void Pong::update(double delta_time)
 	/* turn the ball around if it hits the edge of the screen */
 	if (m_ball.m_x < 0)
 	{
-		score[0]++;
-		std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
-		m_ball.m_dx = -m_ball.m_dx;
-		reset();
-	}
-	if (m_ball.m_x > s_gc->m_screen->w - 10)
-	{
 		score[1]++;
 		std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
 		m_ball.m_dx = -m_ball.m_dx;
-		reset();
+		reset(static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20));
+	}
+	if (m_ball.m_x > s_gc->m_screen->w - 10)
+	{
+		score[0]++;
+		std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
+		m_ball.m_dx = -m_ball.m_dx;
+		reset(static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20));
 	}
 	if ((m_ball.m_y < 0 || m_ball.m_y > s_gc->m_screen->h - 10))
 	{
