@@ -6,6 +6,7 @@
 
 class Window {
 public:
+	Window() : m_width(100), m_height(100), m_title("uninitialized") {}; 
 	Window(int p_width, int p_height, std::string p_title);
 	~Window();
 

@@ -63,7 +63,7 @@ void Paddle::update(float p_delta_time)
     }
     else if(m_direction == Direction::DOWN)
     {
-        if(m_position.m_y <= GameContext::getInstance().m_screen->h - m_dimensions.m_y)
+        if(m_position.m_y <= GameContext::getInstance()->m_screen->h - m_dimensions.m_y)
         {
             m_position.m_y += m_velocity.m_y * p_delta_time;
         }

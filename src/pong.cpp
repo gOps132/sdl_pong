@@ -40,7 +40,7 @@ Pong::~Pong()
 {
 	std::cout << "delete pong\n";
 	// FIXME:  POSSIBLE MEMORY LEAK FOR GAME CONTEXT IF UNINITIALIZED
-	delete GameContext::getInstance().m_window;
+	delete GameContext::getInstance();
 	SDL_Quit();
 }
 
@@ -67,9 +67,9 @@ void Pong::gameLoop()
 		// std::cout << "Average Frames Per Second: " << avg_fps << "\n";
 
 		// Do event loop
-		while (SDL_PollEvent(&GameContext::getInstance().m_ev))
+		while (SDL_PollEvent(&GameContext::getInstance()->m_ev))
 		{
-			switch (GameContext::getInstance().m_ev.type)
+			switch (GameContext::getInstance()->m_ev.type)
 			{
 				case SDL_EventType::SDL_EVENT_QUIT:
 					m_interrupt = false;
@@ -77,8 +77,8 @@ void Pong::gameLoop()
 				default:
 					break;
 			}
-			m_p1.handleInput(GameContext::getInstance().m_ev);
-			m_p2.handleInput(GameContext::getInstance().m_ev);
+			m_p1.handleInput(GameContext::getInstance()->m_ev);
+			m_p2.handleInput(GameContext::getInstance()->m_ev);
 		}
 
 		// FRAMERATE CAP
@@ -168,7 +168,7 @@ void Pong::update(double delta_time)
 	Vector2D normal = {0.0, 1.0};
 	Vector2D new_trajectory = reflect(incident, normal);
 
-    std::cout << "New Trajectory: (" << new_trajectory.m_x << ", " << new_trajectory.m_y << ")\n";
+    // std::cout << "New Trajectory: (" << new_trajectory.m_x << ", " << new_trajectory.m_y << ")\n";
 
 	if(checkCollisions(m_ball, m_p1) || checkCollisions(m_ball, m_p2))
 	{
@@ -186,14 +186,14 @@ void Pong::update(double delta_time)
 		m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
 		reset({static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)});
 	}
-	if (m_ball.m_position.m_x > GameContext::getInstance().m_screen->w - 10)
+	if (m_ball.m_position.m_x > GameContext::getInstance()->m_screen->w - 10)
 	{
 		score[0]++;
 		// std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
 		m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
 		reset({static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)});
 	}
-	if ((m_ball.m_position.m_y < 0 || m_ball.m_position.m_y > GameContext::getInstance().m_screen->h - 10))
+	if ((m_ball.m_position.m_y < 0 || m_ball.m_position.m_y > GameContext::getInstance()->m_screen->h - 10))
 	{
 		m_ball.m_velocity.m_y = -m_ball.m_velocity.m_y;
 	}
@@ -202,16 +202,16 @@ void Pong::update(double delta_time)
 void Pong::draw()
 {
 	// draw background
-	SDL_Rect rect = {0,0,GameContext::getInstance().m_window->getWidth(),GameContext::getInstance().m_window->getHeight()};
-	SDL_FillSurfaceRect(GameContext::getInstance().m_screen, &rect, 0x7F3AF9FA);
+	SDL_Rect rect = {0,0,GameContext::getInstance()->m_window->getWidth(),GameContext::getInstance()->m_window->getHeight()};
+	SDL_FillSurfaceRect(GameContext::getInstance()->m_screen, &rect, 0x7F3AF9FA);
 
-	m_p1.draw(GameContext::getInstance().m_screen);
-	m_p2.draw(GameContext::getInstance().m_screen);
-	m_ball.draw(GameContext::getInstance().m_screen);
+	m_p1.draw(GameContext::getInstance()->m_screen);
+	m_p2.draw(GameContext::getInstance()->m_screen);
+	m_ball.draw(GameContext::getInstance()->m_screen);
 
-    // SDL_SetRenderDrawColor( GameContext::getInstance().m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-	SDL_RenderClear(GameContext::getInstance().m_renderer);
-	SDL_UpdateTexture(GameContext::getInstance().m_texture, nullptr, GameContext::getInstance().m_screen->pixels, GameContext::getInstance().m_screen->w * sizeof(uint32_t));
-	SDL_RenderTexture(GameContext::getInstance().m_renderer, GameContext::getInstance().m_texture, nullptr, nullptr);
-	SDL_RenderPresent(GameContext::getInstance().m_renderer);
+    // SDL_SetRenderDrawColor( GameContext::getInstance()->m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_RenderClear(GameContext::getInstance()->m_renderer);
+	SDL_UpdateTexture(GameContext::getInstance()->m_texture, nullptr, GameContext::getInstance()->m_screen->pixels, GameContext::getInstance()->m_screen->w * sizeof(uint32_t));
+	SDL_RenderTexture(GameContext::getInstance()->m_renderer, GameContext::getInstance()->m_texture, nullptr, nullptr);
+	SDL_RenderPresent(GameContext::getInstance()->m_renderer);
 }

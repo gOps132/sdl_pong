@@ -6,6 +6,8 @@
 #define SCREEN_WIDTH 640	//window height
 #define SCREEN_HEIGHT 480	//window width
 
+GameContext *GameContext::s_instance = nullptr;
+
 GameContext::GameContext()
 {
 	std::cout << "instance created" << "\n";
@@ -46,9 +48,10 @@ GameContext::GameContext()
 
 GameContext::~GameContext()
 {
+	std::cout << "deleted instance";
 	delete m_window;
-	delete m_texture;
 	SDL_DestroySurface(m_screen);
 	SDL_DestroyRenderer(m_renderer);
+	// delete m_texture; // FIXME: uhh somehow deleting this causes an abort
 }
 

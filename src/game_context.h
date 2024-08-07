@@ -9,15 +9,16 @@
 // singleton
 class GameContext {
 private:
-	// static GameContext *s_instance;
+	static GameContext *s_instance;
 	GameContext();
 	GameContext(GameContext const&) = delete;
 	GameContext& operator=(GameContext const&) = delete;
 public:
 	~GameContext();
 
-	inline static GameContext &getInstance() {
-		static GameContext s_instance;
+	inline static GameContext *getInstance() {
+		if (!s_instance)
+			s_instance = new GameContext();
 		return s_instance;
 	}
 
