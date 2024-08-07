@@ -54,7 +54,6 @@ void Pong::gameLoop()
 	uint32_t counted_frames = 0;
 	Timestep fps_timer;
 	fps_timer.start();
-end:
 	while (m_interrupt)
 	{
 		uint32_t frame_start = fps_timer.get_ticks();
@@ -63,6 +62,7 @@ end:
 		{
 			avg_fps = 0;
 		}
+
 
 		// std::cout << "Average Frames Per Second: " << avg_fps << "\n";
 
@@ -73,7 +73,7 @@ end:
 			{
 				case SDL_EventType::SDL_EVENT_QUIT:
 					m_interrupt = false;
-					goto end;
+					break;
 				default:
 					break;
 			}
@@ -117,7 +117,9 @@ void Pong::reset(float p_x, float p_y)
 	m_ball.m_dx, m_ball.m_dy -= (m_ball.m_dx > m_iv || m_ball.m_dy > m_iv) ? 10.0f : 0.0f;
 }
 
+// TODO: add more hitboxes
 // TODO: REFRACTOR THE CODE IN A MORE GENERAL AND MODULAR DESIGN PATTERN
+// TODO: change to return the vector of the ball direction
 bool Pong::checkCollisions(Ball &p_ball, Paddle &p_paddle)
 {
 	// depends if paddle is left or right
@@ -195,9 +197,9 @@ void Pong::draw()
 	SDL_Rect rect = {0,0,s_gc->m_window->getWidth(),s_gc->m_window->getHeight()};
 	SDL_FillSurfaceRect(s_gc->m_screen, &rect, 0x7F3AF9FA);
 
-	m_ball.draw(s_gc->m_screen);
 	m_p1.draw(s_gc->m_screen);
 	m_p2.draw(s_gc->m_screen);
+	m_ball.draw(s_gc->m_screen);
 
     // SDL_SetRenderDrawColor( s_gc->m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear(s_gc->m_renderer);
