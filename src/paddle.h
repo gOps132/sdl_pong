@@ -2,6 +2,7 @@
 #define __PADDLE_H__
 
 #include <SDL3/SDL.h>
+#include "vector2d.h"
 
 class Paddle {
 public:
@@ -15,9 +16,10 @@ public:
 	void update(float p_delta_time);
 	void draw(SDL_Surface *p_surface);
 public:
-	float m_x,m_y;
-	float m_w,m_h;
-	float m_dy;
+	Vector2D m_position;
+	Vector2D m_dimensions;
+	Vector2D m_velocity;
+
 	int m_color;
 	Type m_type;
 private:

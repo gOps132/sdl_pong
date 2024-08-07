@@ -3,6 +3,7 @@
 
 #include <SDL3/SDL.h>
 #include <random>
+#include "vector2d.h"
 
 uint32_t colorConvert(SDL_Surface* surface, int p_color)
 {
@@ -23,6 +24,14 @@ T random_uniform(const T p_range_min, const T p_range_max)
 	std::uniform_int_distribution<T> 		distr(p_range_min, p_range_max);
 
 	return distr(generator);
+}
+
+Vector2D reflect(Vector2D &p_incident, Vector2D &p_normal)
+{
+	Vector2D n = p_normal;
+	n.normalize();
+	float dot_product = p_incident.dot(n);
+	return p_incident - n * (2 * dot_product);
 }
 
 #endif // __HELPER_H__

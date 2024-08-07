@@ -23,13 +23,12 @@ public:
 	~Pong();
 
 	void gameLoop();
-	void reset(float p_x, float p_y);
+	void Pong::reset(Vector2D p_position);
 	bool checkCollisions(Ball &p_ball, Paddle &p_paddle);
 	void update(double delta_time);
 	void draw();
 
 private:
-	GameContext		 *s_gc;
 	Paddle 			 m_p1;
 	Paddle 			 m_p2;
 	Ball 			 m_ball;

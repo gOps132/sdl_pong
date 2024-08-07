@@ -5,7 +5,7 @@
 #include "game_context.h"
 
 Paddle::Paddle(Paddle::Type p_type, float p_x, float p_y, float p_w, float p_h, float p_dy, int p_color)
-	: m_type(p_type), m_x(p_x), m_y(p_y), m_w(p_w), m_h(p_h), m_dy(p_dy), m_color(p_color)
+	: m_type(p_type), m_position{p_x, p_y}, m_dimensions{p_w, p_h}, m_velocity{0.0f, p_dy}, m_color(p_color)
 {
 	m_direction = Direction::NONE;
 }
@@ -56,26 +56,26 @@ void Paddle::update(float p_delta_time)
 {
 	if(m_direction == Direction::UP)
     {
-        if(m_y >= 0)
+        if(m_position.m_y >= 0)
         {
-            m_y -= m_dy * p_delta_time;
+            m_position.m_y -= m_velocity.m_y * p_delta_time;
         }
     }
     else if(m_direction == Direction::DOWN)
     {
-        if(m_y <= GameContext::getInstance().m_screen->h - m_h)
+        if(m_position.m_y <= GameContext::getInstance().m_screen->h - m_dimensions.m_y)
         {
-            m_y += m_dy * p_delta_time;
+            m_position.m_y += m_velocity.m_y * p_delta_time;
         }
     }
 }
 
 void Paddle::draw(SDL_Surface *p_surface)
 {
-	m_rect.x = m_x;
-	m_rect.y = m_y;
-	m_rect.w = m_w;
-	m_rect.h = m_h;
+	m_rect.x = m_position.m_x;
+	m_rect.y = m_position.m_y;
+	m_rect.w = m_dimensions.m_x;
+	m_rect.h = m_dimensions.m_y;
 
 	// render fill rect?
 	int r = SDL_FillSurfaceRect(p_surface, &m_rect, m_color);
