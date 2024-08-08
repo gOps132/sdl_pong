@@ -33,13 +33,13 @@ Pong::Pong()
 			0xffffffff
 		)
 {
-	reset({static_cast<float>(SCREEN_WIDTH / 2), static_cast<float>(SCREEN_HEIGHT / 2)});
+	Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), static_cast<float>(SCREEN_HEIGHT / 2)};
+	reset(pos);
 }
 
 Pong::~Pong()
 {
 	std::cout << "delete pong\n";
-	// FIXME:  POSSIBLE MEMORY LEAK FOR GAME CONTEXT IF UNINITIALIZED
 	delete GameContext::getInstance();
 	SDL_Quit();
 }
@@ -108,7 +108,7 @@ void Pong::gameLoop()
 	}
 }
 
-void Pong::reset(Vector2D p_position)
+void Pong::reset(Vector2D &p_position)
 {
 	// center ball
 	m_ball.init(p_position);
@@ -184,14 +184,16 @@ void Pong::update(double delta_time)
 		score[1]++;
 		// std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
 		m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
-		reset({static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)});
+		Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)};
+		reset(pos);
 	}
 	if (m_ball.m_position.m_x > GameContext::getInstance()->m_screen->w - 10)
 	{
 		score[0]++;
 		// std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
 		m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
-		reset({static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)});
+		Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)};
+		reset(pos);	
 	}
 	if ((m_ball.m_position.m_y < 0 || m_ball.m_position.m_y > GameContext::getInstance()->m_screen->h - 10))
 	{

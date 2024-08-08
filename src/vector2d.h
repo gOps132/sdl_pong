@@ -13,12 +13,6 @@ public:
 	Vector2D(float p_x, float p_y) : m_x(p_x), m_y(p_y) {}
 	Vector2D(Vector2D& p_vector) : m_x(p_vector.m_x), m_y(p_vector.m_y) {}
 
-	// making a copy constructor
-	Vector2D operator=(const Vector2D& p_vector)
-	{
-		return { p_vector.m_x, p_vector.m_y };	
-	} 
-
 	inline float dot(const Vector2D &p_vector) const
 	{
 		return m_x * p_vector.m_x + m_y * p_vector.m_y;

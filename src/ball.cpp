@@ -9,6 +9,7 @@ Ball::Ball(float p_w, float p_h, float p_dx, float p_dy, int p_color)
 
 void Ball::init(Vector2D &p_position)
 {
+	std::cout << p_position.m_x << " " << p_position.m_y << "\n";
 	m_position = p_position;
 }
 
