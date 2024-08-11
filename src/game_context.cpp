@@ -48,10 +48,10 @@ GameContext::GameContext()
 
 GameContext::~GameContext()
 {
-	std::cout << "deleted instance";
+	// delete m_texture; // FIXME: uhh somehow deleting this causes an abort
 	delete m_window;
 	SDL_DestroySurface(m_screen);
 	SDL_DestroyRenderer(m_renderer);
-	// delete m_texture; // FIXME: uhh somehow deleting this causes an abort
+	std::cout << "deleted instance";
 }
 

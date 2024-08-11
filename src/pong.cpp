@@ -158,8 +158,6 @@ bool Pong::checkCollisions(Ball &p_ball, Paddle &p_paddle)
 // TODO: Render score
 void Pong::update(double delta_time)
 {
-
-
 	m_p1.update(delta_time);
 	m_p2.update(delta_time);
 	m_ball.update(delta_time);
