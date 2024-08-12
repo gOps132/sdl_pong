@@ -68,6 +68,11 @@ void Paddle::update(float p_delta_time)
             m_position.m_y += m_velocity.m_y * p_delta_time;
         }
     }
+
+	m_bounding_box.x_min = m_position.m_x;
+	m_bounding_box.x_max = m_position.m_x + m_dimensions.m_x;
+	m_bounding_box.y_min = m_position.m_y;
+	m_bounding_box.y_max = m_position.m_y + m_dimensions.m_y;
 }
 
 void Paddle::draw(SDL_Surface *p_surface)

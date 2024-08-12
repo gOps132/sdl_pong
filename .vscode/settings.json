@@ -1,10 +1,6 @@
 {
 	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-	"cmake.configureArgs": [
-		"-DBUILD_ZYKLON_EXAMPLES=ON",
-		"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-		"-DZYKLON_ENABLE_OPENGL=ON"
-	],
+	"cmake.configureArgs": [],
 	"cmake.debugConfig": {
 		"cwd": "${workspaceFolder}"
 	},

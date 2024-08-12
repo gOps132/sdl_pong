@@ -117,42 +117,15 @@ void Pong::reset(Vector2D &p_position)
 	m_ball.m_velocity.m_x, m_ball.m_velocity.m_y -= (m_ball.m_velocity.m_x > m_iv || m_ball.m_velocity.m_y > m_iv) ? 10.0f : 0.0f;
 }
 
-// TODO: add more hitboxes
-// TODO: REFRACTOR THE CODE IN A MORE GENERAL AND MODULAR DESIGN PATTERN
-// TODO: change to return the vector of the ball direction
 bool Pong::checkCollisions(Ball &p_ball, Paddle &p_paddle)
 {
-	// depends if paddle is left or right
-	if (p_paddle.m_type == Paddle::Type::LEFT)
-	{
-		// cross x boundary
-		// hits the height of the paddle offset of the y pos
-		// and less than the y offset of the paddle plus the height of the paddle
-		if (
-			(p_paddle.m_position.m_x + p_paddle.m_dimensions.m_x > m_ball.m_position.m_x)		&& 
-			(p_ball.m_position.m_y > p_paddle.m_position.m_y) 					&& 
-			(p_ball.m_position.m_y < p_paddle.m_position.m_y + p_paddle.m_dimensions.m_y))
-		{
-			return true;
-		}
-	}
+	bool x_overlap = p_ball.m_bounding_box.x_min < p_paddle.m_bounding_box.x_max	&&
+					p_ball.m_bounding_box.x_max > p_paddle.m_bounding_box.x_min;
 
-	if (p_paddle.m_type == Paddle::Type::RIGHT)
-	{
-		// cross right x boundary
-		// hits the height of the paddle offset of the y pos
-		// and less than the y offset of hte paddle plus the height of the paddle
-		if(
-			(p_paddle.m_position.m_x - p_paddle.m_dimensions.m_x < m_ball.m_position.m_x)		&&
-			(p_ball.m_position.m_y > p_paddle.m_position.m_y) 					&& 
-			(p_ball.m_position.m_y < p_paddle.m_position.m_y + p_paddle.m_dimensions.m_y)
-		)
-		{
-			return true;
-		}
-	}
+	bool y_overlap = p_ball.m_bounding_box.y_min < p_paddle.m_bounding_box.y_max	&&
+					p_ball.m_bounding_box.y_max > p_paddle.m_bounding_box.y_min;
 
-	return false;
+	return (x_overlap && y_overlap);
 }
 
 // TODO: Render score
@@ -163,6 +136,7 @@ void Pong::update(double delta_time)
 	m_ball.update(delta_time);
 
 	Vector2D incident = {m_ball.m_velocity.m_x, m_ball.m_velocity.m_y};
+	// TODO: Have iterations of point checking, bounding vectors for collisions
 	Vector2D normal = {0.0, 1.0};
 	Vector2D new_trajectory = reflect(incident, normal);
 
@@ -171,6 +145,7 @@ void Pong::update(double delta_time)
 	if(checkCollisions(m_ball, m_p1) || checkCollisions(m_ball, m_p2))
 	{
 		// TODO: Get the vector normal of the surface of something it hits
+
 
 		m_ball.m_velocity.m_x += 10.0;
 		m_ball.m_velocity.m_y += 10.0;

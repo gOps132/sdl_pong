@@ -9,7 +9,6 @@ Ball::Ball(float p_w, float p_h, float p_dx, float p_dy, int p_color)
 
 void Ball::init(Vector2D &p_position)
 {
-	std::cout << p_position.m_x << " " << p_position.m_y << "\n";
 	m_position = p_position;
 }
 
@@ -17,6 +16,11 @@ void Ball::update(float p_delta_time)
 {
 	m_position.m_x += m_velocity.m_x * p_delta_time;
 	m_position.m_y += m_velocity.m_y * p_delta_time;
+
+	m_bounding_box.x_min = m_position.m_x;
+	m_bounding_box.x_max = m_position.m_x + m_dimensions.m_x;
+	m_bounding_box.y_min = m_position.m_y;
+	m_bounding_box.y_max = m_position.m_y + m_dimensions.m_y;
 }
 
 void Ball::draw(SDL_Surface *p_surface)

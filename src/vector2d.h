@@ -44,4 +44,13 @@ public:
 	
 };
 
+class AABB {
+public:
+	AABB() : x_min(0.0f), y_min(0.0f), x_max(0.0f), y_max(0.0f) {}	
+
+	float x_min, y_min; // bottom left
+	float x_max, y_max; // top right
+};
+
+
 #endif // __VECTOR2D_H__

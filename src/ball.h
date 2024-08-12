@@ -14,6 +14,7 @@ public:
 	void update(float p_delta_time);
 	void draw(SDL_Surface *p_surface);
 public:
+	AABB	 m_bounding_box;
 	Vector2D m_position;
 	Vector2D m_dimensions;
 	Vector2D m_velocity;
