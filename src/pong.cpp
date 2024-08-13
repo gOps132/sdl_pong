@@ -31,9 +31,9 @@ Pong::Pong()
 {
 	Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), static_cast<float>(SCREEN_HEIGHT / 2)};
 
-	m_ball.reserve(100);
+	m_ball.reserve(200);
 	// create 100 balls
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		m_ball.emplace_back(
 			10.0f, 10.0f,
