@@ -3,28 +3,21 @@
 
 #include <SDL3/SDL.h>
 #include "vector2d.h"
+#include "box_object.h"
 
-class Paddle {
+class Paddle : public BoxObject {
 public:
 	enum class Type {LEFT = 0,RIGHT};
 	enum class Direction {NONE=0, UP, DOWN};
 
-	Paddle(Type p_type, float p_x, float p_y, float p_w, float p_h, float p_dy, int p_color);
+	Paddle(Type p_type, float p_x, float p_y, float p_dx, float p_dy, float p_w, float p_h, int p_color);
 	~Paddle() = default;
 	
-	void handleInput(SDL_Event const &p_event);
-	void update(float p_delta_time);
-	void draw(SDL_Surface *p_surface);
-public:
-	AABB 	 m_bounding_box;
-	Vector2D m_position;
-	Vector2D m_dimensions;
-	Vector2D m_velocity;
-
-	int m_color;
-	Type m_type;
+	virtual void handleInput(SDL_Event const &p_event) override;
+	virtual void update(float p_delta_time) override;
+	virtual void draw(SDL_Surface *p_surface) override;
 private:
-	SDL_Rect m_rect;
+	Type m_type;
 	Direction m_direction;
 };
 

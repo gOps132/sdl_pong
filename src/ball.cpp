@@ -2,9 +2,10 @@
 
 #include <SDL3/SDL.h>
 #include "game_context.h"
+#include "box_object.h"
 
 Ball::Ball(float p_w, float p_h, float p_dx, float p_dy, int p_color)
-	: m_dimensions{p_w, p_h}, m_velocity{p_dx, p_dy}, m_color(p_color)
+	: BoxObject(0.0f, 0.0f, p_w, p_h, p_dx, p_dy, p_color)
 {}
 
 void Ball::init(Vector2D &p_position)

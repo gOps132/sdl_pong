@@ -14,8 +14,8 @@ Pong::Pong()
 			Paddle::Type::LEFT,
 			20.0f,
 			static_cast<float>(SCREEN_HEIGHT / 2) - 50,
+			0.0f, 200.0f,
 			10.0f, 50.0f,
-			200.0f,
 			0xffffffff
 		),
 		m_p2(
@@ -23,8 +23,8 @@ Pong::Pong()
 			// 20.0,20.0,
 			static_cast<float>(SCREEN_WIDTH) - 20 - 10,
 			static_cast<float>((SCREEN_HEIGHT / 2) - 50),
+			0.0f, 200.0f,
 			10.0f, 50.0f,
-			200.0f,
 			0xffffffff
 		),
 		m_ball(
@@ -117,15 +117,38 @@ void Pong::reset(Vector2D &p_position)
 	m_ball.m_velocity.m_x, m_ball.m_velocity.m_y -= (m_ball.m_velocity.m_x > m_iv || m_ball.m_velocity.m_y > m_iv) ? 10.0f : 0.0f;
 }
 
-bool Pong::checkCollisions(Ball &p_ball, Paddle &p_paddle)
+bool Pong::checkCollisions(BoxObject &p_ball, BoxObject &p_paddle)
 {
-	bool x_overlap = p_ball.m_bounding_box.x_min < p_paddle.m_bounding_box.x_max	&&
+	 m_x_overlap = p_ball.m_bounding_box.x_min < p_paddle.m_bounding_box.x_max	&&
 					p_ball.m_bounding_box.x_max > p_paddle.m_bounding_box.x_min;
 
-	bool y_overlap = p_ball.m_bounding_box.y_min < p_paddle.m_bounding_box.y_max	&&
+	 m_y_overlap = p_ball.m_bounding_box.y_min < p_paddle.m_bounding_box.y_max	&&
 					p_ball.m_bounding_box.y_max > p_paddle.m_bounding_box.y_min;
 
-	return (x_overlap && y_overlap);
+	return (m_x_overlap && m_y_overlap);
+}
+
+Vector2D Pong::calcNormal(BoxObject &p_ball, BoxObject &p_paddle)
+{
+	if (m_x_overlap < m_y_overlap) {
+		// Collision is more likely on the left/right side
+		if (p_ball.m_bounding_box.x_max > p_paddle.m_bounding_box.x_min) {
+			// Collision on the left side of Box B (normal points left)
+			return {1, 0};
+		} else {
+			// Collision on the right side of Box B (p_normal points right)
+			return {-1, 0};
+		}
+	} else {
+		// Collision is more likely on the top/bottom side
+		if (p_ball.m_bounding_box.y_max > p_paddle.m_bounding_box.y_min) {
+			// Collision on the bottom side of Box B (p_normal points down)
+			return {0, -1};
+		} else {
+			// Collision on the top side of Box B (p_normal points up)
+			return {0, 1};
+		}
+	}
 }
 
 // TODO: Render score
@@ -137,18 +160,21 @@ void Pong::update(double delta_time)
 
 	Vector2D incident = {m_ball.m_velocity.m_x, m_ball.m_velocity.m_y};
 	// TODO: Have iterations of point checking, bounding vectors for collisions
-	Vector2D normal = {0.0, 1.0};
-	Vector2D new_trajectory = reflect(incident, normal);
-
-    // std::cout << "New Trajectory: (" << new_trajectory.m_x << ", " << new_trajectory.m_y << ")\n";
+	Vector2D normal;
+	Vector2D new_trajectory;
 
 	if(checkCollisions(m_ball, m_p1) || checkCollisions(m_ball, m_p2))
 	{
-		// TODO: Get the vector normal of the surface of something it hits
+		// normal = calcNormal(m_ball, m_p1);
+		// new_trajectory = reflect(incident, normal);
 
+		// m_ball.m_velocity.m_x = new_trajectory.m_x + 10.0;;
+		// m_ball.m_velocity.m_y = new_trajectory.m_y + 10.0;;
 
-		m_ball.m_velocity.m_x += 10.0;
-		m_ball.m_velocity.m_y += 10.0;
+    	// std::cout << "Old Trajectory: (" << m_ball.m_velocity.m_x << ", " << m_ball.m_velocity.m_y << ")\n";
+    	// std::cout << "New Trajectory: (" << new_trajectory.m_x << ", " << new_trajectory.m_y << ")\n";
+		
+		// new trajectory
 		m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
 	}
 	/* turn the ball around if it hits the edge of the screen */

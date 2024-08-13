@@ -12,6 +12,8 @@
 #include "Window.h"
 #include "Paddle.h"
 #include "ball.h"
+#include "vector2d.h"
+#include "box_object.h"
 
 #define SCREEN_WIDTH 	640
 #define SCREEN_HEIGHT 	480
@@ -24,15 +26,20 @@ public:
 
 	void gameLoop();
 	void reset(Vector2D &p_position);
-	bool checkCollisions(Ball &p_ball, Paddle &p_paddle);
+	bool checkCollisions(BoxObject &p_ball, BoxObject &p_paddle);
+	Vector2D calcNormal(BoxObject &p_ball, BoxObject &p_paddle);
+
 	void update(double delta_time);
 	void draw();
 
-private:	
+private:
 	Paddle 			 m_p1;
 	Paddle 			 m_p2;
 	Ball 			 m_ball;
-	
+
+	float	 m_x_overlap;
+	float	 m_y_overlap;
+
 	float m_iv = 130.0f;
 	float m_last_frame_time = 1.0f;
 	int score[2] = {0,0};

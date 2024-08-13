@@ -3,9 +3,10 @@
 
 #include "paddle.h"
 #include "game_context.h"
+#include "box_object.h"
 
-Paddle::Paddle(Paddle::Type p_type, float p_x, float p_y, float p_w, float p_h, float p_dy, int p_color)
-	: m_type(p_type), m_position{p_x, p_y}, m_dimensions{p_w, p_h}, m_velocity{0.0f, p_dy}, m_color(p_color)
+Paddle::Paddle(Paddle::Type p_type, float p_x, float p_y, float p_dx, float p_dy, float p_w, float p_h, int p_color)
+	: m_type(p_type), BoxObject(p_x, p_y, p_w, p_h, p_x, p_y, p_color)
 {
 	m_direction = Direction::NONE;
 }
