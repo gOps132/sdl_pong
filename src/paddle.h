@@ -10,7 +10,7 @@ public:
 	enum class Type {LEFT = 0,RIGHT};
 	enum class Direction {NONE=0, UP, DOWN};
 
-	Paddle(Type p_type, float p_x, float p_y, float p_dx, float p_dy, float p_w, float p_h, int p_color);
+	Paddle(Type p_type, float p_x, float p_y, float p_dx, float p_dy, float p_w, float p_h, unsigned int p_color);
 	~Paddle() = default;
 	
 	virtual void handleInput(SDL_Event const &p_event) override;

@@ -8,6 +8,7 @@
 #include "timestep.h"
 #include "helper.h"
 #include "vector2d.h"
+#include "ball.h"
 
 Pong::Pong()
 	: 	m_p1(
@@ -26,14 +27,21 @@ Pong::Pong()
 			0.0f, 200.0f,
 			10.0f, 50.0f,
 			0xffffffff
-		),
-		m_ball(
-			10.0f, 10.0f,
-			130.0f, 130.0f,
-			0xffffffff
 		)
 {
 	Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), static_cast<float>(SCREEN_HEIGHT / 2)};
+
+	m_ball.reserve(100);
+	// create 100 balls
+	for (int i = 0; i < 100; i++)
+	{
+		m_ball.emplace_back(
+			10.0f, 10.0f,
+			130.0f + (float)i, 130.0f + (float)i,
+			0xffffffff
+		);
+	}
+
 	reset(pos);
 }
 
@@ -111,10 +119,13 @@ void Pong::gameLoop()
 void Pong::reset(Vector2D &p_position)
 {
 	// center ball
-	m_ball.init(p_position);
+	for (auto& ball : m_ball)
+	{
+		ball.init(p_position);
 
-	// decrement the speed of the ball if its beyond the initial speed
-	m_ball.m_velocity.m_x, m_ball.m_velocity.m_y -= (m_ball.m_velocity.m_x > m_iv || m_ball.m_velocity.m_y > m_iv) ? 10.0f : 0.0f;
+		// decrement the speed of the ball if its beyond the initial speed
+		ball.m_velocity.m_x, ball.m_velocity.m_y -= (ball.m_velocity.m_x > m_iv || ball.m_velocity.m_y > m_iv) ? 10.0f : 0.0f;
+	}
 }
 
 bool Pong::checkCollisions(BoxObject &p_ball, BoxObject &p_paddle)
@@ -154,17 +165,22 @@ Vector2D Pong::calcNormal(BoxObject &p_ball, BoxObject &p_paddle)
 // TODO: Render score
 void Pong::update(double delta_time)
 {
+	// // TODO: Have iterations of point checking, bounding vectors for collisions
+	// Vector2D incident = {m_ball.m_velocity.m_x, m_ball.m_velocity.m_y};
+	// Vector2D normal;
+	// Vector2D new_trajectory;
+
 	m_p1.update(delta_time);
 	m_p2.update(delta_time);
-	m_ball.update(delta_time);
-
-	Vector2D incident = {m_ball.m_velocity.m_x, m_ball.m_velocity.m_y};
-	// TODO: Have iterations of point checking, bounding vectors for collisions
-	Vector2D normal;
-	Vector2D new_trajectory;
-
-	if(checkCollisions(m_ball, m_p1) || checkCollisions(m_ball, m_p2))
+	
+	for (auto& ball : m_ball)
 	{
+		ball.update(delta_time);
+	}
+
+
+	// if(checkCollisions(m_ball, m_p1) || checkCollisions(m_ball, m_p2))
+	// {
 		// normal = calcNormal(m_ball, m_p1);
 		// new_trajectory = reflect(incident, normal);
 
@@ -175,28 +191,31 @@ void Pong::update(double delta_time)
     	// std::cout << "New Trajectory: (" << new_trajectory.m_x << ", " << new_trajectory.m_y << ")\n";
 		
 		// new trajectory
-		m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
-	}
+	// 	m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
+	// }
 	/* turn the ball around if it hits the edge of the screen */
-	if (m_ball.m_position.m_x < 0)
+	for (auto& ball : m_ball)
 	{
-		score[1]++;
-		// std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
-		m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
-		Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)};
-		reset(pos);
-	}
-	if (m_ball.m_position.m_x > GameContext::getInstance()->m_screen->w - 10)
-	{
-		score[0]++;
-		// std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
-		m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
-		Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)};
-		reset(pos);	
-	}
-	if ((m_ball.m_position.m_y < 0 || m_ball.m_position.m_y > GameContext::getInstance()->m_screen->h - 10))
-	{
-		m_ball.m_velocity.m_y = -m_ball.m_velocity.m_y;
+		if (ball.m_position.m_x < 0)
+		{
+			score[1]++;
+			// std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
+			ball.m_velocity.m_x = -ball.m_velocity.m_x;
+			// Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)};
+			// reset(pos);
+		}
+		if (ball.m_position.m_x > GameContext::getInstance()->m_screen->w - 10)
+		{
+			score[0]++;
+			// std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
+			ball.m_velocity.m_x = -ball.m_velocity.m_x;
+			// Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)};
+			// reset(pos);	
+		}
+		if ((ball.m_position.m_y < 0 || ball.m_position.m_y > GameContext::getInstance()->m_screen->h - 10))
+		{
+			ball.m_velocity.m_y = -ball.m_velocity.m_y;
+		}
 	}
 }
 
@@ -208,7 +227,10 @@ void Pong::draw()
 
 	m_p1.draw(GameContext::getInstance()->m_screen);
 	m_p2.draw(GameContext::getInstance()->m_screen);
-	m_ball.draw(GameContext::getInstance()->m_screen);
+	for (auto& ball : m_ball)
+	{
+		ball.draw(GameContext::getInstance()->m_screen);
+	}
 
     // SDL_SetRenderDrawColor( GameContext::getInstance()->m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 	SDL_RenderClear(GameContext::getInstance()->m_renderer);

@@ -8,7 +8,7 @@
 
 class Ball : public BoxObject {
 public:
-	Ball(float p_w, float p_h, float p_dx, float p_dy, int p_color);
+	Ball(float p_w, float p_h, float p_dx, float p_dy, unsigned int p_color);
 	~Ball() = default;
  
 	void Ball::init(Vector2D &p_position);

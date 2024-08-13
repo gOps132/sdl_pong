@@ -15,7 +15,7 @@ public:
 class BoxObject
 {
 public:
-	BoxObject(float p_x, float p_y, float p_w, float p_h, float p_dx, float p_dy, int p_color) 
+	BoxObject(float p_x, float p_y, float p_w, float p_h, float p_dx, float p_dy, unsigned int p_color) 
 		: m_position{p_x, p_y}, m_dimensions{p_w, p_h}, m_velocity{p_dx, p_dy}, m_color(p_color) {};
 	virtual ~BoxObject() {};
 	virtual void handleInput(SDL_Event const &p_event) = 0;
@@ -26,8 +26,8 @@ public:
 	Vector2D m_position;
 	Vector2D m_dimensions;
 	Vector2D m_velocity;
-	int m_color;
 protected:
+	unsigned int m_color;
 	SDL_Rect m_rect;
 };
 

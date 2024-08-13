@@ -33,9 +33,9 @@ public:
 	void draw();
 
 private:
-	Paddle 			 m_p1;
-	Paddle 			 m_p2;
-	Ball 			 m_ball;
+	Paddle 			 				m_p1;
+	Paddle 			 				m_p2;
+	std::vector<Ball> 			 	m_ball;
 
 	float	 m_x_overlap;
 	float	 m_y_overlap;

@@ -5,7 +5,7 @@
 #include "game_context.h"
 #include "box_object.h"
 
-Paddle::Paddle(Paddle::Type p_type, float p_x, float p_y, float p_dx, float p_dy, float p_w, float p_h, int p_color)
+Paddle::Paddle(Type p_type, float p_x, float p_y, float p_dx, float p_dy, float p_w, float p_h, unsigned int p_color)
 	: m_type(p_type), BoxObject(p_x, p_y, p_w, p_h, p_x, p_y, p_color)
 {
 	m_direction = Direction::NONE;

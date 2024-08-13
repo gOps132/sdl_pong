@@ -4,7 +4,7 @@
 #include "game_context.h"
 #include "box_object.h"
 
-Ball::Ball(float p_w, float p_h, float p_dx, float p_dy, int p_color)
+Ball::Ball(float p_w, float p_h, float p_dx, float p_dy, unsigned int p_color)
 	: BoxObject(0.0f, 0.0f, p_w, p_h, p_dx, p_dy, p_color)
 {}
 
@@ -38,3 +38,4 @@ void Ball::draw(SDL_Surface *p_surface)
 		throw SDL_GetError();
 	}
 }
+
