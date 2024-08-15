@@ -178,43 +178,60 @@ void Pong::update(double delta_time)
 		ball.update(delta_time);
 	}
 
-
-	/* turn the ball around if it hits the edge of the screen */
-	for (auto& ball : m_ball)
+	
+	for(auto it = m_ball.begin(); it != m_ball.end(); /*no incremeent*/)
 	{
-		if(checkCollisions(ball, m_p1) || checkCollisions(ball, m_p2))
+		if(checkCollisions(*it, m_p1) || checkCollisions(*it, m_p2))
 		{
+			// TODO: IMPLEMENT MORE SOPHISTICATED COLLISION REACTION
+
 			// normal = calcNormal(ball, m_p1);
 			// new_trajectory = reflect(incident, normal);
 
-			// ball.m_velocity.m_x = new_trajectory.m_x + 10.0;;
-			// ball.m_velocity.m_y = new_trajectory.m_y + 10.0;;
+			// it->m_velocity.m_x = new_trajectory.m_x + 10.0;;
+			// it->m_velocity.m_y = new_trajectory.m_y + 10.0;;
 
-			// std::cout << "Old Trajectory: (" << ball.m_velocity.m_x << ", " << ball.m_velocity.m_y << ")\n";
+			// std::cout << "Old Trajectory: (" << it->m_velocity.m_x << ", " << it->m_velocity.m_y << ")\n";
 			// std::cout << "New Trajectory: (" << new_trajectory.m_x << ", " << new_trajectory.m_y << ")\n";
 			
-			ball.m_velocity.m_x = -ball.m_velocity.m_x;
+			it->m_velocity.m_x = -it->m_velocity.m_x;
+			// ++it;
 		}
-		if (ball.m_position.m_x < 0)
+		/* turn the ball around if it hits the edge of the screen */
+		if ((it->m_position.m_y < 0 || it->m_position.m_y > GameContext::getInstance()->m_screen->h - 10))
 		{
-			score[1]++;
-			// std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
-			ball.m_velocity.m_x = -ball.m_velocity.m_x;
-			// Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)};
-			// reset(pos);
+			it->m_velocity.m_y = -it->m_velocity.m_y;
 		}
-		if (ball.m_position.m_x > GameContext::getInstance()->m_screen->w - 10)
+		if (it->m_position.m_x > GameContext::getInstance()->m_screen->w - 10)
 		{
 			score[0]++;
-			// std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
-			ball.m_velocity.m_x = -ball.m_velocity.m_x;
+			std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
+
+			// it->m_velocity.m_x = -it->m_velocity.m_x;
 			// Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)};
 			// reset(pos);	
-		}
-		if ((ball.m_position.m_y < 0 || ball.m_position.m_y > GameContext::getInstance()->m_screen->h - 10))
+			it = m_ball.erase(it);
+			// ++it;
+		} else if (it->m_position.m_x < 0)
 		{
-			ball.m_velocity.m_y = -ball.m_velocity.m_y;
+			score[1]++;
+			std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
+			
+			// it->m_velocity.m_x = -it->m_velocity.m_x;
+			// Vector2D pos = {static_cast<float>(SCREEN_WIDTH / 2), (float)random_uniform<int>(20, SCREEN_HEIGHT-20)};
+			// reset(pos);
+			it = m_ball.erase(it);
+		} 
+		else
+		{
+			++it;
 		}
+	}
+
+	if (m_ball.empty())
+	{
+		std::cout << "Game Over\n";
+		std::cout << "P1: " << score[0] << " P2: " << score[1] << "\n";
 	}
 }
 

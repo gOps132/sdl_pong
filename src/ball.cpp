@@ -1,5 +1,6 @@
 #include "ball.h"
 
+#include <iostream>
 #include <SDL3/SDL.h>
 #include "game_context.h"
 #include "box_object.h"
@@ -7,6 +8,11 @@
 Ball::Ball(float p_w, float p_h, float p_dx, float p_dy, unsigned int p_color)
 	: BoxObject(0.0f, 0.0f, p_w, p_h, p_dx, p_dy, p_color)
 {}
+
+Ball::~Ball()
+{
+	std::cout << "ball erased\n";
+}
 
 void Ball::init(Vector2D &p_position)
 {
