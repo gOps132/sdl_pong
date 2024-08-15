@@ -179,23 +179,22 @@ void Pong::update(double delta_time)
 	}
 
 
-	// if(checkCollisions(m_ball, m_p1) || checkCollisions(m_ball, m_p2))
-	// {
-		// normal = calcNormal(m_ball, m_p1);
-		// new_trajectory = reflect(incident, normal);
-
-		// m_ball.m_velocity.m_x = new_trajectory.m_x + 10.0;;
-		// m_ball.m_velocity.m_y = new_trajectory.m_y + 10.0;;
-
-    	// std::cout << "Old Trajectory: (" << m_ball.m_velocity.m_x << ", " << m_ball.m_velocity.m_y << ")\n";
-    	// std::cout << "New Trajectory: (" << new_trajectory.m_x << ", " << new_trajectory.m_y << ")\n";
-		
-		// new trajectory
-	// 	m_ball.m_velocity.m_x = -m_ball.m_velocity.m_x;
-	// }
 	/* turn the ball around if it hits the edge of the screen */
 	for (auto& ball : m_ball)
 	{
+		if(checkCollisions(ball, m_p1) || checkCollisions(ball, m_p2))
+		{
+			// normal = calcNormal(ball, m_p1);
+			// new_trajectory = reflect(incident, normal);
+
+			// ball.m_velocity.m_x = new_trajectory.m_x + 10.0;;
+			// ball.m_velocity.m_y = new_trajectory.m_y + 10.0;;
+
+			// std::cout << "Old Trajectory: (" << ball.m_velocity.m_x << ", " << ball.m_velocity.m_y << ")\n";
+			// std::cout << "New Trajectory: (" << new_trajectory.m_x << ", " << new_trajectory.m_y << ")\n";
+			
+			ball.m_velocity.m_x = -ball.m_velocity.m_x;
+		}
 		if (ball.m_position.m_x < 0)
 		{
 			score[1]++;
